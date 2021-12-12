@@ -9,9 +9,10 @@ import pyshark
 import subprocess
 import Evtx.Evtx as evtx
 import requests
+import shutil
 
-log_file = open('app_log.txt', 'a')
-con = sqlite3.connect('events_db.sqlite')
+log_file = open('Databases/app_log.txt', 'a')
+con = sqlite3.connect('Databases/events_db.sqlite')
 cur = con.cursor()
 
 cur.execute(
@@ -165,25 +166,69 @@ def detect(file_path, rules, firewall, console):
 @click.option('--interface', multiple=False, help="Interface to capture traffic on")
 @click.option('--capture_filter', default="", multiple=False, help="Capture filter")
 @click.option('--timeout', multiple=False, help="Time of capturing")
-def agent(action, agent_host, interface, capture_filter, timeout):
+@click.option('--file_number', multiple=True, help="Number of file to download")
+@click.option('--command', multiple=False, help="Command to execute")
+def agent(action, agent_host, interface, capture_filter, timeout, file_number, command):
     if action == 'netconfig':
         headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
-        r = requests.get(f'http://{agent}/netconfig', headers=headers)
-        click.echo(r.content)
+        r = requests.get(f'http://{agent_host}/netconfig', headers=headers)
+        result = str(r.content).replace('\\n', '\n').replace('\\t', '\t')
+        click.echo(result)
 
     elif action == 'capture':
         pload = {"interface": interface, "filter": capture_filter, "timeout": str(timeout)}
         headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
-        r = requests.post(f'http://{agent_host}/capture', data=json.dumps(pload), headers=headers)
-        pass
+        response = requests.post(f'http://{agent_host}/capture', data=json.dumps(pload), headers=headers, stream=True)
+        file_name = "Files_application/pcaps/" + str(datetime.now().strftime("%d-%m-%Y_%H:%M:%S")) + ".pcap"
+        if response.status_code == 200:
+            with open(file_name, 'wb') as f:
+                f.write(response.content)
+
     elif action == 'list_pcaps':
         pass
     elif action == 'list_logs':
-        pass
-    elif action == 'download':
-        pass
+        headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
+        r = requests.get(f'http://{agent_host}/list-logs', headers=headers)
+        click.echo(r.content)
+
+    elif action == 'download_pcap':
+        for file in file_number:
+            headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
+            r = requests.get(f'http://{agent_host}/list-pcaps', headers=headers)
+            json_str = str(r.content)
+            json_str = json_str[3:-2]
+            list = json_str.split(',')
+            file_name = "Files_application/pcaps/" + list[int(file)-1][4:-1]
+
+            parameters = {"nr": file}
+            headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
+            response = requests.get(f'http://{agent_host}/download-pcap', params=parameters, headers=headers, stream=True)
+            if response.status_code == 200:
+                with open(file_name, 'wb') as f:
+                    f.write(response.content)
+
+    elif action == 'download_log':
+        for file in file_number:
+            headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
+            r = requests.get(f'http://{agent_host}/list-logs', headers=headers)
+            json_str = str(r.content)
+            json_str = json_str[3:-2]
+            list = json_str.split(',')
+            file_name = "Files_application/logs/" + list[int(file)-1][4:-1]
+
+            parameters = {"nr": file}
+            headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
+            response = requests.get(f'http://{agent_host}/download-log', params=parameters, headers=headers, stream=True)
+            if response.status_code == 200:
+                with open(file_name, 'wb') as f:
+                    f.write(response.content)
     elif action == 'command':
-        pass
+        headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
+        payload = {"command": command}
+        r = requests.post(f'http://{agent_host}/command', headers=headers, data=json.dumps(payload))
+        result = str(r.content).replace('\\n', '\n').replace('\\t', '\t')
+        click.echo(result)
+
 
 if __name__ == "__main__":
     application()
