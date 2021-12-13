@@ -23,7 +23,7 @@ app = FastAPI()
 
 
 def capture_live_packets(network_interface, capture_filter, timeout, file_name):
-    capture = pyshark.LiveCapture(interface=network_interface, output_file=file_name)
+    capture = pyshark.LiveCapture(interface=network_interface, display_filter=capture_filter, output_file=file_name)
     capture.sniff(timeout=timeout)
 
 

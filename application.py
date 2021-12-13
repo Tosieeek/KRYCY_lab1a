@@ -229,6 +229,9 @@ def agent(action, agent_host, interface, capture_filter, timeout, file_number, c
         result = str(r.content).replace('\\n', '\n').replace('\\t', '\t')
         click.echo(result)
 
+    else:
+        click.echo("Invalid action")
+
 
 if __name__ == "__main__":
     application()
