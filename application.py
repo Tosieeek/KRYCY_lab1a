@@ -76,10 +76,11 @@ def process_output(output, firewall, console):
         r = requests.post(f'http://{console}/', data=json.dumps(pload), headers=headers)
 
     if output[1] and firewall != "":
-        if output[2].find("suspicious ip") > -1:
+        if output[2].find("suspicious ip") > -1 or output[2].find("suspicious number of ips") > -1:
             pload = {'rule': "BLOCK", 'value': str(output[3])}
             headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
             r = requests.post(f'http://{firewall}/', data=json.dumps(pload), headers=headers)
+
 
 
 @click.group()

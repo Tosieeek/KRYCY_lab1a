@@ -1,6 +1,54 @@
 import re
 import Evtx.Evtx as evtx
 import pyshark
+import yara
+
+
+def detect_words_yara(filepath):
+    rule = yara.compile("Databases/words.yar")
+    matches = rule.match(filepath)
+
+    found_words = []
+
+    if len(matches) != 0:
+        for log in matches[0].strings:
+            found_words.append(str(log[len(log) - 1], "utf-8"))
+
+    print(found_words)
+
+    if len(found_words) != 0:
+        action_alert = "remote"
+        action_block = False
+        description = "Alert - suspicious words"
+    else:
+        action_alert = None
+        action_block = None
+        description = None
+
+    return action_alert, action_block, description, found_words
+
+
+
+def detect_num_of_ips_yara(filepath):
+    rule = yara.compile("Databases/number_of_ips.yar")
+    matches = rule.match(filepath)
+
+    found_ips = []
+    if len(matches) != 0:
+        for log in matches[0].strings:
+            found_ips.append(str(log[len(log) - 1], "utf-8"))
+        found_ips = list(dict.fromkeys(found_ips))
+    print(found_ips)
+
+    if len(matches) != 0:
+        action_alert = "remote"
+        action_block = True
+        description = "Alert - suspicious number of ips"
+    else:
+        action_alert = None
+        action_block = None
+        description = None
+    return action_alert, action_block, description, found_ips
 
 
 def detect_ip(file_path):
@@ -95,3 +143,6 @@ def detect_words(file_path):
         description = None
 
     return action_alert, action_block, description, found_words
+
+
+detect_num_of_ips_yara("test_dir/test_pcap.pcap")

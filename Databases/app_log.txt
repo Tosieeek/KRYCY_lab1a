@@ -9442,3 +9442,19 @@ Layer TCP:
 13-12-2021 22:16:38:   
  detect in test_dir/test_ip.txt: ('remote', True, 'Alert - suspicious ip', ['190.123.20.11'])
 
+17-12-2021 21:41:37:   
+ read_file: test
+jaa nie wiem czym sa wyrazenia regulalrne...
+aala ma kota i kod ma tez Aale
+i nie weim
+daalej nie wieeem
+abcdef
+
+mAlware
+
+17-12-2021 23:56:31:   
+ detect in test_dir/test_ip.txt: ('remote', True, 'Alert - suspicious number of ips', ['132.121.233.111', '132.121.233.112'])
+
+18-12-2021 00:01:59:   
+ detect in test_dir/test_ip.txt: ('remote', True, 'Alert - suspicious number of ips', ['132.121.233.111', '132.121.233.112'])
+
