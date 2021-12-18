@@ -180,7 +180,7 @@ def agent(action, agent_host, interface, capture_filter, timeout, file_number, c
         pload = {"interface": interface, "filter": capture_filter, "timeout": str(timeout)}
         headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
         response = requests.post(f'http://{agent_host}/capture', data=json.dumps(pload), headers=headers, stream=True)
-        file_name = "Files_application/pcaps/" + str(datetime.now().strftime("%d-%m-%Y_%H:%M:%S")) + ".pcap"
+        file_name = "Files_application/pcaps/" + str(datetime.now().strftime("%d-%m-%Y_%H-%M-%S")) + ".pcap"
         if response.status_code == 200:
             with open(file_name, 'wb') as f:
                 f.write(response.content)

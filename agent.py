@@ -36,7 +36,7 @@ async def show_():
 
 @app.post("/capture")
 async def capture_(cm: Capture_model):
-    file_name = "Files_agent/pcaps/" + str(datetime.now().strftime("%d-%m-%Y_%H:%M:%S")) + ".pcap"
+    file_name = "Files_agent/pcaps/" + str(datetime.now().strftime("%d-%m-%Y_%H-%M-%S")) + ".pcap"
     thread = Thread(target=capture_live_packets, args=(cm.interface, cm.filter, int(cm.timeout), file_name))
     thread.start()
     thread.join()
