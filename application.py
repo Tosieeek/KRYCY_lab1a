@@ -186,7 +186,10 @@ def agent(action, agent_host, interface, capture_filter, timeout, file_number, c
                 f.write(response.content)
 
     elif action == 'list_pcaps':
-        pass
+        headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
+        r = requests.get(f'http://{agent_host}/list-pcaps', headers=headers)
+        click.echo(r.content)
+
     elif action == 'list_logs':
         headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
         r = requests.get(f'http://{agent_host}/list-logs', headers=headers)

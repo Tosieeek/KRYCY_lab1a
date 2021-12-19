@@ -63,5 +63,40 @@ async def show_files_():
     return log_files
 
 
+@app.get("/download-pcap")
+async def download_pcap_(nr: str):
+    path = 'Files_agent/pcaps/'
+    file_to_send = ""
+    for root, directories, files in os.walk(path, topdown=False):
+        counter = 1
+        for name in files:
+            if counter == int(nr):
+                file_to_send = os.path.join(root, name)
+            counter += 1
+    print(file_to_send)
+    return FileResponse(file_to_send)
+
+
+@app.get("/download-log")
+async def download_log_(nr: str):
+    path = 'Files_agent/logs/'
+    file_to_send = ""
+    for root, directories, files in os.walk(path, topdown=False):
+        counter = 1
+        for name in files:
+            if counter == int(nr):
+                file_to_send = os.path.join(root, name)
+            counter += 1
+
+    return FileResponse(file_to_send)
+
+
+@app.post("/command")
+async def command_(cm: Command_model):
+    output = subprocess.check_output(cm.command, shell=True).decode("utf-8")
+    output = str(output)
+    return output
+
+
 if __name__ == '__main__':
     uvicorn.run(app, host="127.0.0.1", port=8003)
