@@ -186,7 +186,7 @@ def detect_anomaly(file_path):
 
     if len(untrusted_ports) > 0:
         action_alert = "remote"
-        action_block = False
+        action_block = True
         description = "Alert - untrusted ports"
     else:
         action_alert = None

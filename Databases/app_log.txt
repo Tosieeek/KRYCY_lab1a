@@ -9458,3 +9458,23 @@ mAlware
 18-12-2021 00:01:59:   
  detect in test_dir/test_ip.txt: ('remote', True, 'Alert - suspicious number of ips', ['132.121.233.111', '132.121.233.112'])
 
+19-12-2021 16:15:21:   
+ detect in test_dir/trick_bot.pcap: ('remote', False, 'Alert - untrusted ports',    port  amount
+3   447   12228
+5   449    1713)
+
+19-12-2021 17:31:45:   
+ detect in test_dir/trick_bot.pcap: ('remote', False, 'Alert - untrusted ports',    port  amount
+3   447   12228
+5   449    1713)
+
+19-12-2021 17:34:20:   
+ detect in test_dir/trick_bot.pcap: ('remote', False, 'Alert - untrusted ports',    port  amount
+3   447   12228
+5   449    1713)
+
+19-12-2021 17:38:07:   
+ detect in test_dir/trick_bot.pcap: ('remote', True, 'Alert - untrusted ports',    port  amount
+3   447   12228
+5   449    1713)
+
