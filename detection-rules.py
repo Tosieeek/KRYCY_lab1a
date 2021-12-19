@@ -4,6 +4,7 @@ import pyshark
 import yara
 
 
+
 def detect_words_yara(filepath):
     rule = yara.compile("Databases/words.yar")
     matches = rule.match(filepath)
@@ -26,7 +27,6 @@ def detect_words_yara(filepath):
         description = None
 
     return action_alert, action_block, description, found_words
-
 
 
 def detect_num_of_ips_yara(filepath):
