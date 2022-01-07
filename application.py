@@ -43,7 +43,7 @@ def file_handling(file_path, re_pattern, grep_pattern, bpf_filter):
 
         return output
 
-    elif file_path.endswith('.pcap'):
+    elif file_path.endswith('.pcap') or file_path.endswith('.pcapng'):
         shark_cap = pyshark.FileCapture(file_path, display_filter=bpf_filter)
         for packet in shark_cap:
             output += str(packet)

@@ -194,3 +194,28 @@ def detect_anomaly(file_path):
         description = None
 
     return action_alert, action_block, description, untrusted_ports
+
+
+def detect_proj2_rule_yara(filepath):
+    rule = yara.compile("Databases/proj2_rule.yar")
+    matches = rule.match(filepath)
+
+    found_words = []
+
+    #if len(matches) != 0:
+    #    for log in matches[0].strings:
+            #found_words.append(str(log[len(log) - 1], "utf-8"))
+        #found_words = list(dict.fromkeys(found_words))
+    #print(found_words)
+    print(matches[0].strings)
+
+    if len(matches) != 0:
+        action_alert = "remote"
+        action_block = False
+        description = "Alert - suspicious command"
+    else:
+        action_alert = None
+        action_block = None
+        description = None
+
+    return action_alert, action_block, description, found_words
